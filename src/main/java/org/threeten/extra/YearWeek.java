@@ -370,7 +370,7 @@ public final class YearWeek
     @Override
     public boolean isSupported(TemporalUnit unit) {
         if (unit instanceof ChronoUnit) {
-            return unit == WEEKS || unit == WEEK_BASED_YEARS;
+            return unit == WEEKS || unit == WEEK_BASED_YEAR;
         }
         return unit != null && unit.isSupportedBy(this);
     }

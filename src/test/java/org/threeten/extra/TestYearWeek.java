@@ -96,10 +96,13 @@ import java.time.chrono.ThaiBuddhistDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.IsoFields;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalQueries;
+import java.time.temporal.TemporalUnit;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.time.temporal.ValueRange;
 import java.util.Locale;
@@ -443,6 +446,20 @@ public class TestYearWeek {
         assertEquals(false, TEST.isSupported(DAY_OF_QUARTER));
         assertEquals(true, TEST.isSupported(WEEK_BASED_YEAR));
         assertEquals(true, TEST.isSupported(WEEK_OF_WEEK_BASED_YEAR));
+    }
+
+    //-----------------------------------------------------------------------
+    // isSupported(TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_isSupported_TemporalUnit() {
+        assertEquals(false, TEST.isSupported((TemporalUnit) null));
+        assertEquals(false, TEST.isSupported(ChronoUnit.DAYS));
+        assertEquals(true, TEST.isSupported(ChronoUnit.WEEKS));
+        assertEquals(false, TEST.isSupported(ChronoUnit.YEARS));
+        assertEquals(true, TEST.isSupported(IsoFields.WEEK_BASED_YEAR));
+        assertEquals(true, TEST.isSupported(IsoFields.WEEK_OF_WEEK_BASED_YEAR));
+        assertEquals(false, TEST.isSupported(IsoFields.WEEK_BASED_YEARS));
     }
 
     //-----------------------------------------------------------------------
