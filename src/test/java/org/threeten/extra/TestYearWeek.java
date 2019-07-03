@@ -89,6 +89,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.chrono.IsoChronology;
@@ -861,6 +862,24 @@ public class TestYearWeek {
         TEST.plusWeeks(Long.MIN_VALUE);
     }
 
+
+    //-----------------------------------------------------------------------
+    // minus(TemporalAmount)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_minus() {
+    	assertEquals(TEST, TEST.minus(Weeks.ZERO));
+    	assertEquals(YearWeek.of(2014, 52), TEST.minus(Weeks.ONE));
+    	assertEquals(YearWeek.of(2014, 43), TEST.minus(Weeks.of(10)));
+    	assertEquals(YearWeek.of(2014, 26), TEST.minus(Weeks.of(27)));
+    	assertEquals(YearWeek.of(2014, 46), TEST.minus(Period.ofWeeks(7)));
+    }
+    
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_minus_with_DayTemporalAmount() {
+    	TEST.minus(Days.ONE);
+    }
+    
     //-----------------------------------------------------------------------
     // minusYears(long)
     //-----------------------------------------------------------------------
