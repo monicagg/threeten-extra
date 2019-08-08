@@ -89,7 +89,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.chrono.IsoChronology;
@@ -745,11 +745,36 @@ public class TestYearWeek {
     }
 
     //-----------------------------------------------------------------------
+    // with(TemporalAdjuster)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_with_TemporalAdjuster_Week() {
+        assertEquals(TEST, YearWeek.of(2017, 5).with(TEST));
+        assertEquals(YearWeek.of(2017, 5), TEST.with(YearWeek.of(2017, 5)));
+        assertEquals(TEST_NON_LEAP, YearWeek.of(2014, 2).with(TEST_NON_LEAP));
+    }
+    
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_with_TemporalAdjuster_Year() {
+        YearWeek.of(2015, 2).with(Year.of(2015));
+    }
+    
+    @Test(expected = DateTimeException.class)
+    public void test_with_TemporalAdjuster_LocalDate() {
+        YearWeek.of(2016, 1).with(LocalDate.of(2015, 6, 20));
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void test_with_TemporalAdjuster_null() {
+    	YearWeek.of(2015, 1).with( (TemporalAdjuster) null);
+    }
+    
+    //-----------------------------------------------------------------------
     // withYear(int)
     //-----------------------------------------------------------------------
     @Test
     public void test_withYear() {
-        assertEquals(YearWeek.of(2014, 1), YearWeek.of(2015, 1).withYear(2014));
+        assertEquals(TEST_NON_LEAP, TEST.withYear(2014));
         assertEquals(YearWeek.of(2009, 53), YearWeek.of(2015, 53).withYear(2009));
     }
 
@@ -862,7 +887,40 @@ public class TestYearWeek {
         TEST.plusWeeks(Long.MIN_VALUE);
     }
 
+    //-----------------------------------------------------------------------
+    // minus(long, TemporalUnit)
+    //-----------------------------------------------------------------------
+    @Test
+    public void test_minus_long_TemporalUnit() {
+    	assertEquals(TEST, TEST.minus(0, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2014, 52), TEST.minus(1, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2014, 43), TEST.minus(10, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2014, 26), TEST.minus(27, ChronoUnit.WEEKS));
+    }
+    
+    @Test
+    public void test_minus_long_TemporalUnit_negative() {
+    	assertEquals(TEST, TEST.minus(0, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2015, 2), TEST.minus(-1, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2015, 11), TEST.minus(-10, ChronoUnit.WEEKS));
+    	assertEquals(YearWeek.of(2015, 28), TEST.minus(-27, ChronoUnit.WEEKS));
+    }
+    
+    @Test(expected = UnsupportedTemporalTypeException.class)
+    public void test_minus_long_DaysTemporalUnit() {
+    	TEST.minus(0, ChronoUnit.DAYS);
+    }
+    
+    @Test(expected = ArithmeticException.class)
+    public void test_minus_max_long_TemporalUnit() {
+    	TEST.minus(Long.MAX_VALUE, ChronoUnit.WEEKS);
+    }
 
+    @Test(expected = ArithmeticException.class)
+    public void test_minus_min_long_TemporalUnit() {
+    	TEST.minus(Long.MIN_VALUE, ChronoUnit.WEEKS);
+    }
+    
     //-----------------------------------------------------------------------
     // minus(TemporalAmount)
     //-----------------------------------------------------------------------
@@ -872,7 +930,6 @@ public class TestYearWeek {
     	assertEquals(YearWeek.of(2014, 52), TEST.minus(Weeks.ONE));
     	assertEquals(YearWeek.of(2014, 43), TEST.minus(Weeks.of(10)));
     	assertEquals(YearWeek.of(2014, 26), TEST.minus(Weeks.of(27)));
-    	assertEquals(YearWeek.of(2014, 46), TEST.minus(Period.ofWeeks(7)));
     }
     
     @Test(expected = UnsupportedTemporalTypeException.class)
